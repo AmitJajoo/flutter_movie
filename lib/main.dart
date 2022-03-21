@@ -63,7 +63,7 @@ class MyApp extends StatelessWidget {
           dividerColor: Colors.white54,
           iconTheme: const IconThemeData(color: Colors.white),
           primaryIconTheme: const IconThemeData(color: Colors.black87)),
-      home: MyHomePage(),
+      home:MyHomePage()
     );
   }
 }

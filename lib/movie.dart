@@ -183,90 +183,103 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Column(mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // Padding(
-            //   padding: const EdgeInsets.all(8.0),
-            //   child: Container(
-            //     width: MediaQuery.of(context).size.width,
-            //     height: 70,
-            //     child: TextField(
-            //       onChanged: (value) => _runFilter(value),
-            //       decoration: InputDecoration(
-            //         suffixIcon: Icon(
-            //           Icons.search,
-            //           color: Colors.grey,
-            //         ),
-            //         border: OutlineInputBorder(
-            //           borderSide: new BorderSide(color: Colors.grey),
-            //           gapPadding: 6.0,
-            //         ),
-            //         focusColor: Colors.grey,
-            //         focusedBorder: OutlineInputBorder(
-            //           borderSide: new BorderSide(color: Colors.grey),
-            //         ),
-            //         // labelText: 'Search Movie',
-            //         hintText: 'Search Movie',
-            //       ),
-            //     ),
-            //   ),
-            // ),
-            // SizedBox(
-            //   height: 80,
-            // ),
-            //  Expanded(
-            //   child: _foundUsers.isNotEmpty
-            //       ? Container(
+      body: Stack(
+        alignment: Alignment.topCenter,
+        children: [
+          SingleChildScrollView(
+            child: Container(
+              margin: EdgeInsets.only(top:100),
+              child: Column(
+               // mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  // Padding(
+                  //   padding: const EdgeInsets.all(8.0),
+                  //   child: Container(
+                  //     width: MediaQuery.of(context).size.width,
+                  //     height: 70,
+                  //     child: TextField(
+                  //       onChanged: (value) => _runFilter(value),
+                  //       decoration: InputDecoration(
+                  //         suffixIcon: Icon(
+                  //           Icons.search,
+                  //           color: Colors.grey,
+                  //         ),
+                  //         border: OutlineInputBorder(
+                  //           borderSide: new BorderSide(color: Colors.grey),
+                  //           gapPadding: 6.0,
+                  //         ),
+                  //         focusColor: Colors.grey,
+                  //         focusedBorder: OutlineInputBorder(
+                  //           borderSide: new BorderSide(color: Colors.grey),
+                  //         ),
+                  //         // labelText: 'Search Movie',
+                  //         hintText: 'Search Movie',
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
+                  // SizedBox(
+                  //   height: 80,
+                  // ),
+                  //  Expanded(
+                  //   child: _foundUsers.isNotEmpty
+                  //       ? Container(
 
-            //           height: 300,
-            //           child: ListView.builder(
-            //             itemCount: _foundUsers.length,
-            //             itemBuilder: (context, index) => Card(
-            //               key: ValueKey(_foundUsers[index]["id"]),
-            //               color: Colors.amberAccent,
-            //               elevation: 4,
-            //               margin: const EdgeInsets.symmetric(vertical: 10),
-            //               child: ListTile(
-            //                 leading: Text(
-            //                   _foundUsers[index]["id"].toString(),
-            //                   style: const TextStyle(fontSize: 24),
-            //                 ),
-            //                 title: Text(_foundUsers[index]['name']),
-            //                 subtitle: Text(
-            //                     '${_foundUsers[index]["age"].toString()} years old'),
-            //               ),
-            //             ),
-            //           ),
-            //         )
-            //       : const Text(
-            //           'No results found',
-            //           style: TextStyle(fontSize: 24),
-            //         ),
-            // ),
-            Container(width: double.infinity,height: 300,child: Search()),
-            SizedBox(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height * 0.6,
-                child: UpcomingMovieUi()),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding:
-                      const EdgeInsets.only(top: 20.0, left: 16, bottom: 4),
-                  child: Text(
-                    "All Time Top Rated Movies",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                  ),
-                ),
-                SizedBox(height: 200, child: TopRated()),
-              ],
-            )
-          ],
-        ),
+                  //           height: 300,
+                  //           child: ListView.builder(
+                  //             itemCount: _foundUsers.length,
+                  //             itemBuilder: (context, index) => Card(
+                  //               key: ValueKey(_foundUsers[index]["id"]),
+                  //               color: Colors.amberAccent,
+                  //               elevation: 4,
+                  //               margin: const EdgeInsets.symmetric(vertical: 10),
+                  //               child: ListTile(
+                  //                 leading: Text(
+                  //                   _foundUsers[index]["id"].toString(),
+                  //                   style: const TextStyle(fontSize: 24),
+                  //                 ),
+                  //                 title: Text(_foundUsers[index]['name']),
+                  //                 subtitle: Text(
+                  //                     '${_foundUsers[index]["age"].toString()} years old'),
+                  //               ),
+                  //             ),
+                  //           ),
+                  //         )
+                  //       : const Text(
+                  //           'No results found',
+                  //           style: TextStyle(fontSize: 24),
+                  //         ),
+                  // ),
+                 // Container(width: double.infinity,height: 300,child: Search()),
+
+                  SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height * 0.6,
+                      child: UpcomingMovieUi()),
+
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding:
+                            const EdgeInsets.only(top: 20.0, left: 16, bottom: 4),
+                        child: Text(
+                          "All Time Top Rated Movies",
+                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                        ),
+                      ),
+                      SizedBox(height: 200, child: TopRated()),
+
+                    ],
+                  )
+                ],
+              ),
+            ),
+          ),
+          Search(),
+        ],
       ),
     );
   }
