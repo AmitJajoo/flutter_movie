@@ -56,7 +56,7 @@ class _UpcomingMovieUiState extends State<UpcomingMovieUi> {
             CarouselSlider.builder(
                 itemCount: poster.length,
                 options: CarouselOptions(
-                    autoPlay: false,
+                    autoPlay: true,
                     scrollDirection: Axis.horizontal,
                     viewportFraction: 1.0,
                     enlargeCenterPage: false,

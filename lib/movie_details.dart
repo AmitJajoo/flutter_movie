@@ -3,6 +3,7 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:movie/modal/cast_modal.dart';
+import 'package:movie/modal/movie_modal.dart';
 import 'package:movie/modal/single_details_movie.dart';
 import 'package:movie/service/remote_service.dart';
 
@@ -12,9 +13,11 @@ class DetailView extends StatefulWidget {
   const DetailView({
     Key? key,
     required this.movieId,
+    required this.name,
   }) : super(key: key);
 
   final String movieId;
+  final String name;
 
   @override
   State<DetailView> createState() => _DetailViewState();
@@ -23,6 +26,7 @@ class DetailView extends StatefulWidget {
 class _DetailViewState extends State<DetailView> {
   CastModel? movieName;
   DetailsSingleMovieModal? detail;
+  List<MovieRecommadation>? similar_movie;
   bool isLoaded = false;
   List<String?> poster = [];
   List<String> actorName = [];
@@ -37,7 +41,14 @@ class _DetailViewState extends State<DetailView> {
   Future refresh() async {
     detail = (await RemoteService().getDetailsSingleMovie(widget.movieId))!;
     setState(() {});
-    print("1223908 ${detail?.backdropPath}");
+    print("1223 ${detail?.backdropPath}");
+    // print('poster : ' + detail!.posterPath!);
+  }
+  Future<List<MovieRecommadation>?> similarMovies() async {
+    print("Movie name ${widget.name}");
+    similar_movie = (await RemoteService().getMovies(widget.name)) ?? [];
+    setState(() {});
+    print("1223908 ${similar_movie}");
     // print('poster : ' + detail!.posterPath!);
   }
 
@@ -64,11 +75,21 @@ class _DetailViewState extends State<DetailView> {
   }
 
   Future<void> apiFetch() async {
-    await Future.wait([refresh(), getData()]).then((v) {}).whenComplete(() {
+    await Future.wait([refresh(), getData(),similarMovies()]).then((v) {}).whenComplete(() {
       status = false;
     });
 
     print(status == true ? 'Loading' : 'FINISHED');
+  }
+  String durationToString(int minutes) {
+    var d = Duration(minutes:minutes);
+    List<String> parts = d.toString().split(':');
+    return '${parts[0].padLeft(2, '0')}:${parts[1].padLeft(2, '0')}';
+  }
+
+  String removeCharacterImdbId(String id){
+    var a = id.split("tt");
+    return a[1];
   }
 
   @override
@@ -108,11 +129,11 @@ class _DetailViewState extends State<DetailView> {
                         //     "https://image.tmdb.org/t/p/original" +
                         //         detail!.posterPath!
                         // ), placeholder: AssetImage("assets/image/no-image.png"),
-                        child: detail?.posterPath != null
+                        child: detail?.backdropPath != null
                             ? CachedNetworkImage(
                                 imageUrl:
                                     "https://image.tmdb.org/t/p/original" +
-                                        detail!.posterPath!,
+                                        detail!.backdropPath!,
                                 fit: BoxFit.cover,
                                 placeholder: (context, url) =>
                                     CircularProgressIndicator(),
@@ -260,11 +281,12 @@ class _DetailViewState extends State<DetailView> {
                       const SizedBox(
                         width: 5.0,
                       ),
-                      Text(
-                        "${detail?.runtime}", //TODO //runtime
+                    detail?.runtime!=null?  Text(
+                        durationToString(detail!.runtime!),
+                        // "${detail?.runtime}", //TODO //runtime
                         style: const TextStyle(
                             fontSize: 11.0, fontWeight: FontWeight.bold),
-                      ),
+                      ):Text(""),
                       const SizedBox(
                         width: 10.0,
                       ),
@@ -483,22 +505,63 @@ class _DetailViewState extends State<DetailView> {
                   const SizedBox(
                     height: 10.0,
                   ),
-                  // Padding(
-                  //   padding: const EdgeInsets.only(left: 2.0),
-                  //   child: RepositoryProvider.value(
-                  //     value: movieRepository,
-                  //     child: SimilarMoviesWidget(
-                  //       themeController: themeController,
-                  //       movieRepository: movieRepository,
-                  //       movieId: movieId,
-                  //     ),
-                  //   ),
-                  // )
+
+
                 ],
               ),
             ),
+
             const SizedBox(
               height: 20.0,
+            ),
+            Visibility(
+              replacement: Center(child: CircularProgressIndicator()),
+              visible: isLoaded,
+              child: Container(
+                height: 210,
+                child: ListView.builder(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: similar_movie?.length ?? 0,
+                    itemBuilder: (context, index) {
+                      return  GestureDetector(
+                        onTap: (){
+                          Navigator.push(context,MaterialPageRoute(builder: (context)=>DetailView(movieId:removeCharacterImdbId(similar_movie![index].imdbId!), name: similar_movie![index].title!,)));
+                        },
+                        child: Stack(
+                          alignment: Alignment.bottomCenter,
+                          children: [
+                            SizedBox(
+                              width: 140,
+                              height: 200,
+                              child:similar_movie![index].poster != null? CachedNetworkImage(
+                                  imageUrl:similar_movie![index].poster!
+                                  ,
+                                  width: 90,
+                                  height: 120,
+                                  filterQuality: FilterQuality.high,
+                                  fit: BoxFit.contain,
+                                  color: Color.fromRGBO(0, 0, 0, 0.2),
+                                  colorBlendMode: BlendMode.darken):Container(),
+                            ),
+                            Container(
+                                alignment: Alignment.bottomCenter,
+                                width: 90,
+                                height: 120,
+                                child:similar_movie![index].title!=null? Text(
+                                  similar_movie![index].title!,
+                                  style: TextStyle(
+                                      color: Colors.white.withOpacity(0.9),
+                                      fontFamily: "Nunito",
+                                      fontWeight: FontWeight.bold),
+                                ):Text("")
+                            ),
+                          ],
+                        ),
+                      );
+
+                    }),
+              ),
             ),
           ],
         ),
