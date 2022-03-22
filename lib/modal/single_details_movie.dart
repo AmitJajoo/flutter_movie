@@ -52,7 +52,7 @@ class DetailsSingleMovieModal {
   String? posterPath;
   List<ProductionCompany> ?productionCompanies;
   List<ProductionCountry>? productionCountries;
-  String ?releaseDate;
+  String? releaseDate;
   int? revenue;
   int? runtime;
   List<SpokenLanguage>? spokenLanguages;

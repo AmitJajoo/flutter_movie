@@ -21,29 +21,27 @@ class DetailView extends StatefulWidget {
 }
 
 class _DetailViewState extends State<DetailView> {
-   CastModel? movieName;
-   DetailsSingleMovieModal? detail;
+  CastModel? movieName;
+  DetailsSingleMovieModal? detail;
   bool isLoaded = false;
   List<String?> poster = [];
   List<String> actorName = [];
-   bool status = true;
+  bool status = true;
   @override
   void initState() {
     // TODO: implement initState
     apiFetch();
     super.initState();
-
   }
+
   Future refresh() async {
     detail = (await RemoteService().getDetailsSingleMovie(widget.movieId))!;
-    setState(() {
-
-    });
+    setState(() {});
     print("1223908 ${detail?.backdropPath}");
-
+    // print('poster : ' + detail!.posterPath!);
   }
-  Future getData() async {
 
+  Future getData() async {
     movieName = (await RemoteService().getCastOfMovies(widget.movieId))!;
 
     for (var i = 0; i < movieName!.cast.length; i++) {
@@ -61,19 +59,14 @@ class _DetailViewState extends State<DetailView> {
     //
     // }
     setState(() {
-      isLoaded=true;
+      isLoaded = true;
     });
   }
 
   Future<void> apiFetch() async {
-
-
-    await Future.wait([refresh(), getData()]).then((v) {
-
-    }).whenComplete(() {
+    await Future.wait([refresh(), getData()]).then((v) {}).whenComplete(() {
       status = false;
     });
-
 
     print(status == true ? 'Loading' : 'FINISHED');
   }
@@ -85,7 +78,8 @@ class _DetailViewState extends State<DetailView> {
     return Scaffold(
       body: Visibility(
         visible: !status,
-        replacement: Center(child:CircularProgressIndicator(
+        replacement: const Center(
+            child: CircularProgressIndicator(
           color: Colors.amber,
         )),
         child: ListView(
@@ -107,22 +101,27 @@ class _DetailViewState extends State<DetailView> {
                               color: Colors.black12,
                             ))),
                       ),
+
                       AspectRatio(
-                          aspectRatio: 3 / 2,
-                          // child: FadeInImage(image: NetworkImage(
-                          //     "https://image.tmdb.org/t/p/original" +
-                          //         detail!.posterPath!
-                          // ), placeholder: AssetImage("assets/image/no-image.png"),
-                          child: CachedNetworkImage(
-
-                            imageUrl:"https://image.tmdb.org/t/p/original" +detail!.posterPath! ,fit: BoxFit.cover,
-                            placeholder: (context,url) => CircularProgressIndicator(),
-                            errorWidget: (context,url,error) => new Icon(Icons.error),
-
-                          )
-
+                        aspectRatio: 3 / 2,
+                        // child: FadeInImage(image: NetworkImage(
+                        //     "https://image.tmdb.org/t/p/original" +
+                        //         detail!.posterPath!
+                        // ), placeholder: AssetImage("assets/image/no-image.png"),
+                        child: detail?.posterPath != null
+                            ? CachedNetworkImage(
+                                imageUrl:
+                                    "https://image.tmdb.org/t/p/original" +
+                                        detail!.posterPath!,
+                                fit: BoxFit.cover,
+                                placeholder: (context, url) =>
+                                    CircularProgressIndicator(),
+                                errorWidget: (context, url, error) =>
+                                    new Icon(Icons.error),
+                              )
+                            : Container(),
                       ), //TODO
-                      ],
+                    ],
                   ),
                   AspectRatio(
                     aspectRatio: 3 / 2,
@@ -174,47 +173,57 @@ class _DetailViewState extends State<DetailView> {
                                   child: AspectRatio(
                                       aspectRatio: 2 / 3,
                                       child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(5.0),
-                                        child: CachedNetworkImage(
-                                            imageUrl:
-                                                "https://image.tmdb.org/t/p/w200" +
-                                                    detail!.posterPath!), //TODO
-                                      )),
+                                          borderRadius:
+                                              BorderRadius.circular(5.0),
+                                          child: detail?.posterPath != null
+                                              ? CachedNetworkImage(
+                                                  imageUrl:
+                                                      "https://image.tmdb.org/t/p/w200" +
+                                                          detail!.posterPath!)
+                                              : Container() //TODO
+                                          )),
                                 ),
                               ],
                             ),
                             const SizedBox(
                               width: 10.0,
                             ),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width - 140,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Text(
-                                    detail!.title ?? "N/A",
-                                    style: const TextStyle(
-                                        fontSize: 18.0,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        "Release date: " + detail!.releaseDate! , //TODO
-                                        style: const TextStyle(
-                                            fontSize: 12.0,
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.w200),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
+                            detail?.releaseDate != null
+                                ? SizedBox(
+                                    width:
+                                        MediaQuery.of(context).size.width - 140,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Text(
+                                          detail?.title ?? "N/A",
+                                          style: const TextStyle(
+                                              fontSize: 18.0,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            // ignore: unnecessary_null_comparison
+
+                                            Text(
+                                              "Release date: " +
+                                                  detail!.releaseDate!,
+                                              style: const TextStyle(
+                                                  fontSize: 12.0,
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.w200),
+                                            )
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                : Container()
                           ],
                         ),
                       )),
@@ -252,7 +261,7 @@ class _DetailViewState extends State<DetailView> {
                         width: 5.0,
                       ),
                       Text(
-                        "${detail!.runtime}", //TODO //runtime
+                        "${detail?.runtime}", //TODO //runtime
                         style: const TextStyle(
                             fontSize: 11.0, fontWeight: FontWeight.bold),
                       ),
@@ -265,7 +274,7 @@ class _DetailViewState extends State<DetailView> {
                           padding: const EdgeInsets.only(right: 10.0),
                           child: ListView.builder(
                             scrollDirection: Axis.horizontal,
-                            itemCount: detail!.genres!.length, //TODO //genre
+                            itemCount: detail?.genres!.length, //TODO //genre
                             itemBuilder: (context, index) {
                               return Padding(
                                 padding: const EdgeInsets.only(right: 5.0),
@@ -277,7 +286,7 @@ class _DetailViewState extends State<DetailView> {
                                             Radius.circular(30.0)),
                                         color: Colors.black.withOpacity(0.3)),
                                     child: Text(
-                                      "${detail!.genres![index].name}",//TODO  // genre type
+                                      "${detail?.genres![index].name}", //TODO  // genre type
                                       maxLines: 2,
                                       style: const TextStyle(
                                           height: 1.4,
@@ -305,8 +314,7 @@ class _DetailViewState extends State<DetailView> {
                   const SizedBox(
                     height: 10.0,
                   ),
-                  Text(
-                      detail!.overview ??"N/A", //TODO Overview
+                  Text(detail?.overview ?? "N/A", //TODO Overview
                       style: const TextStyle(
                           height: 1.5,
                           fontSize: 12.0,
@@ -412,7 +420,7 @@ class _DetailViewState extends State<DetailView> {
                           style: TextStyle(
                               fontSize: 14.0,
                               color: Colors.black.withOpacity(0.5))),
-                      Text(detail!.status ?? "N/A", //TODO status
+                      Text(detail?.status ?? "N/A", //TODO status
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 14.0,
@@ -429,8 +437,7 @@ class _DetailViewState extends State<DetailView> {
                           style: TextStyle(
                               fontSize: 14.0,
                               color: Colors.black.withOpacity(0.5))),
-                      Text(
-                          "\$" + currencyFormatter.format(detail!.budget), //TODO //Bugdet
+                      Text("\$" '${detail?.budget}', //TODO //Bugdet
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 14.0,
@@ -447,9 +454,7 @@ class _DetailViewState extends State<DetailView> {
                           style: TextStyle(
                               fontSize: 14.0,
                               color: Colors.black.withOpacity(0.5))),
-                      Text(
-                          "\$" +
-                              currencyFormatter.format(detail!.revenue), //TODO revenue
+                      Text("\$" '${detail?.revenue}', //TODO revenue
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 14.0,
