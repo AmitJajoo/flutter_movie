@@ -44,6 +44,7 @@ class _DetailViewState extends State<DetailView> {
     print("1223 ${detail?.backdropPath}");
     // print('poster : ' + detail!.posterPath!);
   }
+
   Future<List<MovieRecommadation>?> similarMovies() async {
     print("Movie name ${widget.name}");
     similar_movie = (await RemoteService().getMovies(widget.name)) ?? [];
@@ -75,19 +76,22 @@ class _DetailViewState extends State<DetailView> {
   }
 
   Future<void> apiFetch() async {
-    await Future.wait([refresh(), getData(),similarMovies()]).then((v) {}).whenComplete(() {
+    await Future.wait([refresh(), getData(), similarMovies()])
+        .then((v) {})
+        .whenComplete(() {
       status = false;
     });
 
     print(status == true ? 'Loading' : 'FINISHED');
   }
+
   String durationToString(int minutes) {
-    var d = Duration(minutes:minutes);
+    var d = Duration(minutes: minutes);
     List<String> parts = d.toString().split(':');
     return '${parts[0].padLeft(2, '0')}:${parts[1].padLeft(2, '0')}';
   }
 
-  String removeCharacterImdbId(String id){
+  String removeCharacterImdbId(String id) {
     var a = id.split("tt");
     return a[1];
   }
@@ -281,12 +285,14 @@ class _DetailViewState extends State<DetailView> {
                       const SizedBox(
                         width: 5.0,
                       ),
-                    detail?.runtime!=null?  Text(
-                        durationToString(detail!.runtime!),
-                        // "${detail?.runtime}", //TODO //runtime
-                        style: const TextStyle(
-                            fontSize: 11.0, fontWeight: FontWeight.bold),
-                      ):Text(""),
+                      detail?.runtime != null
+                          ? Text(
+                              durationToString(detail!.runtime!),
+                              // "${detail?.runtime}", //TODO //runtime
+                              style: const TextStyle(
+                                  fontSize: 11.0, fontWeight: FontWeight.bold),
+                            )
+                          : Text(""),
                       const SizedBox(
                         width: 10.0,
                       ),
@@ -502,17 +508,8 @@ class _DetailViewState extends State<DetailView> {
                             fontSize: 14.0,
                             color: Colors.black.withOpacity(0.5))),
                   ),
-                  const SizedBox(
-                    height: 10.0,
-                  ),
-
-
                 ],
               ),
-            ),
-
-            const SizedBox(
-              height: 20.0,
             ),
             Visibility(
               replacement: Center(child: CircularProgressIndicator()),
@@ -524,9 +521,16 @@ class _DetailViewState extends State<DetailView> {
                     scrollDirection: Axis.horizontal,
                     itemCount: similar_movie?.length ?? 0,
                     itemBuilder: (context, index) {
-                      return  GestureDetector(
-                        onTap: (){
-                          Navigator.push(context,MaterialPageRoute(builder: (context)=>DetailView(movieId:removeCharacterImdbId(similar_movie![index].imdbId!), name: similar_movie![index].title!,)));
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => DetailView(
+                                        movieId: removeCharacterImdbId(
+                                            similar_movie![index].imdbId!),
+                                        name: similar_movie![index].title!,
+                                      )));
                         },
                         child: Stack(
                           alignment: Alignment.bottomCenter,
@@ -534,32 +538,34 @@ class _DetailViewState extends State<DetailView> {
                             SizedBox(
                               width: 140,
                               height: 200,
-                              child:similar_movie![index].poster != null? CachedNetworkImage(
-                                  imageUrl:similar_movie![index].poster!
-                                  ,
-                                  width: 90,
-                                  height: 120,
-                                  filterQuality: FilterQuality.high,
-                                  fit: BoxFit.contain,
-                                  color: Color.fromRGBO(0, 0, 0, 0.2),
-                                  colorBlendMode: BlendMode.darken):Container(),
+                              child: similar_movie![index].poster != null
+                                  ? CachedNetworkImage(
+                                      imageUrl: similar_movie![index].poster!,
+                                      width: 90,
+                                      height: 120,
+                                      filterQuality: FilterQuality.high,
+                                      fit: BoxFit.contain,
+                                      color: Color.fromRGBO(0, 0, 0, 0.2),
+                                      colorBlendMode: BlendMode.darken)
+                                  : Container(),
                             ),
                             Container(
                                 alignment: Alignment.bottomCenter,
                                 width: 90,
                                 height: 120,
-                                child:similar_movie![index].title!=null? Text(
-                                  similar_movie![index].title!,
-                                  style: TextStyle(
-                                      color: Colors.white.withOpacity(0.9),
-                                      fontFamily: "Nunito",
-                                      fontWeight: FontWeight.bold),
-                                ):Text("")
-                            ),
+                                child: similar_movie![index].title != null
+                                    ? Text(
+                                        similar_movie![index].title!,
+                                        style: TextStyle(
+                                            color:
+                                                Colors.white.withOpacity(0.9),
+                                            fontFamily: "Nunito",
+                                            fontWeight: FontWeight.bold),
+                                      )
+                                    : Text("")),
                           ],
                         ),
                       );
-
                     }),
               ),
             ),
