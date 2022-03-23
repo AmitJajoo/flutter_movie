@@ -1,7 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:intl/intl.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:movie/modal/cast_modal.dart';
 import 'package:movie/modal/movie_modal.dart';
 import 'package:movie/modal/single_details_movie.dart';
@@ -103,10 +105,14 @@ class _DetailViewState extends State<DetailView> {
     return Scaffold(
       body: Visibility(
         visible: !status,
-        replacement: const Center(
-            child: CircularProgressIndicator(
-          color: Colors.amber,
-        )),
+        // replacement: const Center(
+        //     child: CircularProgressIndicator(
+        //   color: Colors.amber,
+        // )),
+        replacement: Center(
+          child: LoadingAnimationWidget.fourRotatingDots(
+              color: Colors.grey, size: 50),
+        ),
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
