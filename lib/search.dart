@@ -49,7 +49,7 @@ class _SearchState extends State<Search> {
   void dispose() {
     // Clean up the controller when the widget is disposed.
     _controller.dispose();
-    FocusScope.of(context).unfocus();
+   // FocusScope.of(context).unfocus();
     super.dispose();
   }
 

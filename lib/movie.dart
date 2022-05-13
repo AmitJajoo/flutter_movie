@@ -22,7 +22,8 @@ class _MyHomePageState extends State<MyHomePage> {
     //FocusScope.of(context).requestFocus(FocusNode());
     return Scaffold(
       appBar: AppBar(
-        title: Text("Pred App"),
+        centerTitle: true,
+        title: Text("Movie Recommendation"),
         elevation: 0,
         flexibleSpace: Container(
           decoration: const BoxDecoration(
@@ -38,31 +39,29 @@ class _MyHomePageState extends State<MyHomePage> {
         children: [
           SingleChildScrollView(
             child: Container(
-              margin: EdgeInsets.only(top:100),
+              margin: EdgeInsets.only(top: 100),
               child: Column(
-               // mainAxisSize: MainAxisSize.min,
+                // mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-
                   SizedBox(
                       width: MediaQuery.of(context).size.width,
                       height: MediaQuery.of(context).size.height * 0.6,
                       child: UpcomingMovieUi()),
-
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
-                        padding:
-                            const EdgeInsets.only(top: 20.0, left: 16, bottom: 4),
+                        padding: const EdgeInsets.only(
+                            top: 20.0, left: 16, bottom: 4),
                         child: Text(
                           "All Time Top Rated Movies",
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 16),
                         ),
                       ),
                       SizedBox(height: 200, child: TopRated()),
-
                     ],
                   )
                 ],
@@ -75,4 +74,3 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
-
